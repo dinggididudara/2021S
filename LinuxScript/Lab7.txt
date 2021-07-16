@@ -1,0 +1,62 @@
+#! /bin/bash
+echo Soomin
+echo 040899389
+echo CST8102 GNU/Linux
+echo -e "302 \n"
+#description : calculate the final grade and display the letter grade for a course.
+
+#get user's input
+echo -n "Enter ASsignment mark(0-40): "
+read assign
+echo -n "Enter Test 1 mark(0-15): "
+read t1
+echo -n "Enter Test 2 mark(0-15): "
+read t2
+echo -n "Final exam mark(0-30): "
+read final
+
+total=`expr $assign + $t1 + $t2 + $final`
+
+if [[ $total -ge 90 ]]
+then
+        grade="A+"
+elif [[ $total -ge  85 ]] && [[ $total -le 89 ]]
+then
+        grade="A"
+elif [[ $total -ge 80 ]] && [[ $total -le 84 ]]
+then
+        grade="A-"
+elif [[ $total -ge 77 ]] && [[ $total -le 79 ]]
+then
+        grade="B+"
+elif [[ $total -ge 73 ]] && [[ $total -le 76 ]]
+then
+        grade="B"
+elif [[ $total -ge 70 ]] && [ $total -le 72 ]]
+then
+        grade="B-"
+elif [[ $total -ge 67 ]] && [[ $total -le 69 ]]
+then
+        grade="C+"
+elif [[ $total -ge 63 ]] && [[ $total -le 66 ]]
+then
+        grade="C"
+elif [[ $total -ge 60 ]] && [[ $total -le 62 ]]
+then
+        grade="C-"
+elif [[ $total -ge 57 ]] && [[ $total -le 59 ]]
+then
+        grade="D+"
+elif [[ $total -ge 53 ]] && [[ $total -le 56 ]]
+then
+        grade="D"
+elif [[ $total -ge 50 ]] && [[ $total -le 52 ]]
+then
+        grade="D-"
+elif [[ $total -le 49 ]]
+then
+        grade="F"
+fi
+
+echo Your final numeric grade is $total, and your final letter grade is $grade
+
