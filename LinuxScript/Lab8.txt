@@ -1,0 +1,67 @@
+#! /bin/bash
+#Lab8 Soomin 040899389
+#CST8102 302
+#myscript.sh
+#July-21-2021
+#description: user input options for managing users
+
+ clear
+ option=n #initialize
+
+ while [ $option != "Q" ] || [ $option != "q" ]
+ do
+ echo "Choose one of the following options:"
+ echo "A Create a user account"
+ echo "B Delete a user account"
+ echo "C Change supplementary group for a user account"
+ echo "D Change initial group for a user account"
+ echo "E Change default login shell for a user account"
+ echo "F Change account expiration date for a user account"
+ echo "Q Quit"
+ echo -n "What would you like to do?: " option
+
+  if [ ${option} == "A" ] || [ ${option} == "a" ]
+  then
+        echo "Username: " name
+        echo "User's home directory: " homedir
+        echo "Default login shell: " loginsh
+
+useradd -d $homedir -m -s ${loginsh} ${name}
+
+  elif [ ${option} == "B" ] || [ ${option} == "b" ]
+  then
+        echo "Which user?: " deluser
+        userdel -r ${deluser}
+
+  elif [ ${option} == "C" ] || [ ${option} == "c" ]
+  then
+        echo "Which user to change supplementary group?" user
+        echo "group name?" supgroup
+        usermod -G ${supgroup} ${user}
+
+  elif [ ${option} == "D" ] || [ ${option} == "d" ]
+  then
+        echo "Which user to change initial group?: " user
+        echo " initial group name?: " g
+        usermod -g $g ${user}
+
+  elif [ ${option} == "E" ] || [ ${option} == "e" ]
+  then
+echo "Which user to change default login shell?: " user
+          echo "Shell name?: " shell
+          chsh -s ${shell} ${user}
+
+  elif [ ${option} == "F" ] || [ ${option} == "f" ]
+  then
+          echo "Which user to change account expiration date?: " user
+          echo "date? (YYYY-MM-DD): " date
+          usermod -e ${date} ${user}
+
+  elif [ ${option} == "Q" ] || [ ${option} == "q" ]
+  then
+       exit
+
+  fi #if-else ends
+  sleep 3
+  clear 
+ done #while-loop ends
