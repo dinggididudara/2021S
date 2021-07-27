@@ -59,7 +59,9 @@ echo "Which user to change default login shell?: " user
 
   elif [ ${option} == "Q" ] || [ ${option} == "q" ]
   then
-       exit
+          sleep 3
+          clear
+          exit
 
   fi #if-else ends
   sleep 3
