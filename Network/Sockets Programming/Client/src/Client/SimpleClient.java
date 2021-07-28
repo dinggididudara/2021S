@@ -2,15 +2,23 @@ package Client;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Client {
-	public static void main(String[] args) {
+public class SimpleClient {
+	InputStream input;
+	Socket cSocket;
+	void start() {
 		try {
-			Socket cSocket = new Socket("192.168.0.2", 1254); //connect to ip address
+			
+//			ip = InetAddress.getByName(""); //get address
+			
+			cSocket = new Socket(InetAddress.getLocalHost().getHostAddress(), 1254); //connect to ip address
+			System.out.println("You are in Client now.");
 			
 			//reading information
-			InputStream input = cSocket.getInputStream();
+			input = cSocket.getInputStream();
 			
 			byte[] buffer = new byte[100];
 			input.read(buffer);
