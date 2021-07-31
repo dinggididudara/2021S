@@ -1,0 +1,54 @@
+#! /bash/shell
+
+#Lab9
+#Soomin 040899389
+#CST8102_302
+#mycalc.sh
+#30-July-2021
+#description: fuctions that operate add and subtract
+
+function add(){  #function for addition 
+     add=`expr $1 + $2`
+     echo "The Sum of $1 plus $2 equals $add"
+}
+
+function subtract(){   #function for subtraction
+   if [ a -ge b ]
+     sub=`expr $a - $b`
+     echo "The Subtraction of $1 minus $2 equals $sub"
+   else
+     echo "error. exiting now"
+     exit
+   fi
+}
+
+while [[ $menu1 != x || $menu != X ]]
+do
+echo -e "C) Calculation \n X) Exit" $menu1                           #menu 1
+if [[ $menu1 == 'c' || $menu1 == 'C' ]]
+clear
+        echo "Please enter an integer number or X to exit: " $1 $2   #menu 2
+        #if here?
+                echo "+) Add \n-) Subtract \n X) Exit" menu3         #menu 3
+                case $menu3 in
+                        '+')
+                           clear
+                           add
+                           exit ;;
+                        '-')
+                           clear
+                           substract
+                           exit ;;
+                        x|X)
+                           echo "Exit now"
+                           exit ;;
+                        *)
+                           echo "error. please try again"
+                           continue ;;
+                 esac
+         elif [[ $menu1 == 'x' || $menu1 == 'X' ]]
+        echo "Exit now"
+        exit
+fi
+done
+
