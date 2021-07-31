@@ -7,37 +7,45 @@
 #30-July-2021
 #description: fuctions that operate add and subtract
 
-function add(){  #function for addition 
-     add=`expr $1 + $2`
-     echo "The Sum of $1 plus $2 equals $add"
+function add() {  #function for addition 
+     add=`expr $a + $b`
+     echo "The Sum of $a plus $b equals $add"
 }
 
-function subtract(){   #function for subtraction
-   if [ a -ge b ]
-     sub=`expr $a - $b`
-     echo "The Subtraction of $1 minus $2 equals $sub"
-   else
-     echo "error. exiting now"
-     exit
-   fi
+function substract() {   #function for subtraction
+     if [[ $a > $b ]]
+     then
+        sub=`expr $a - $b`
+     else
+        sub=`expr $b - $a`
+     fi
+        echo "The Subtraction of $a minus $b equlas $sub"
 }
 
-while [[ $menu1 != x || $menu != X ]]
+
+menu1=n   #initialize for until-loop
+until [[ $menu1 == 'x' ]] || [[ $menu == 'X' ]] || [[ $menu2 == 'x' ]] || [[ $menu2 == 'X' ]] || [[ $menu3 == 'x' ]] || [[ $menu3 == 'X' ]]
 do
-echo -e "C) Calculation \n X) Exit" $menu1    #menu 1
+
+echo -e "C) Calculation \nX) Exit"  #menu 1
+read menu1
 if [[ $menu1 == 'c' ]] || [[ $menu1 == 'C' ]]
+then
         clear
-        echo "Please enter an integer number or X to exit: " $1 $2 $3 menu2   #menu 2
-        if [[ "$1" != "" ]] && [[ "$2" != "" ]]  && [[ "$3" == "" ]] 
-                echo "+) Add \n-) Subtract \n X) Exit" menu3     #menu 3
+        echo -n "Please enter an integer number or X to exit: "    #menu 2
+        read a b c
+        if [[ -n "$a" ]] && [[ -n "$b" ]] && [[ -z "$c" ]]
+        then
+                echo -e "+) Add \n-) Subtract \nX) Exit"  #menu 3
+	read menu3
                 case $menu3 in
                         '+')
                            clear
-                           add
+                           add $a $b
                            exit ;;
                         '-')
                            clear
-                           substract
+                           substract $a $b
                            exit ;;
                         x|X)
                            echo "Exit now"
@@ -45,10 +53,17 @@ if [[ $menu1 == 'c' ]] || [[ $menu1 == 'C' ]]
                         *)
                            echo "Error. Please try again!"
                            continue ;;
-                 esac
-
-        fi    #menu 3 end
-elif [[ $menu1 == 'x' ]] || [[ $menu1 == 'X' ]] || [[ $menu2 == 'x' ]] || [[ $menu2 == 'X' ]] || [[ $menu3 == 'x' ]] || [[ $menu3 == 'X' ]]    #if user enters exit
+                 esac   #menu 3 end
+         elif [[ $a == 'x' ]] || [[ $a == 'X' ]]
+         then
+	echo "Exit now"
+                 exit
+       else
+                  echo "Invalid input. Please try again"
+                  continue;
+        fi    #menu 2 end
+elif [[ $menu1 == 'x' ]] || [[ $menu1 == 'X' ]]  #if user enters exit
+then
         echo "Exit now"
         exit
 else    #if other inputs (invalid)
@@ -56,4 +71,4 @@ else    #if other inputs (invalid)
         continue
 fi
 
-done        
+done   #while-loop end 
