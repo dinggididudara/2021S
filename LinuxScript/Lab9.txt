@@ -8,23 +8,17 @@
 #description: fuctions that operate add and subtract
 
 function add() {  #function for addition 
-     add=`expr $a + $b`
-     echo "The Sum of $a plus $b equals $add"
+        add=`expr $a + $c`
+        echo "The Sum of $a plus $c equals $add"
 }
 
 function substract() {   #function for subtraction
-     if [[ $a > $b ]]
-     then
-        sub=`expr $a - $b`
-     else
-        sub=`expr $b - $a`
-     fi
-        echo "The Subtraction of $a and $b equlas $sub"
+        sub=`expr $a - $c`
+        echo "The Subtraction of $a minus $c equlas $sub"
 }
 
+
 menu1=n   #initialize for until-loop
-menu2=n
-menu3=n
 
 until [[ $menu1 == 'x' ]] || [[ $menu1 == 'X' ]] || [[ $menu2 == 'x' ]] || [[ $menu2 == 'X' ]] || [[ $menu3 == 'x' ]] || [[ $menu3 == 'X' ]]
 do
@@ -32,48 +26,49 @@ do
 echo -e "C) Calculation \nX) Exit"  #menu 1
 read menu1
 
+
 case $menu1 in
     'c'|'C')
         clear
         echo -n "Please enter an integer number or X to exit: "    #menu 2
         read a b c d
-        if [[ -n "$a" ]] && [[ -n "$b" ]] && [[ -n "$c" ]] && [[ -z "$d" ]] #if 1st, 2nd, 3rd parameters are not null, and 4th parameter is null
+        if [[ -n "$a" ]] && [[ -n "$b" ]] && [[ -z "$d" ]]    #if 4th parameter is null
          then
 
         case $b in    #if 2nd parameter is + or -
           '+')
-            $menu3='+' ;;
+             menu3='+' ;;
           '-')
-            $menu3='-' ;;
+             menu3='-' ;;
             *)
-            echo -e "+) Add \n-) Substract \nX) Exit" #menu 3
-            read menu3
+             echo -e "+) Add \n-) Substract \nX) Exit" #menu 3
+             read menu3
+             c=$b ;;
         esac
 
-	read menu3
-                if [[ $menu3 == '+' ]]
-                then
-                           clear
-                           add $a $c
-                           sleep 3; clear
-                           unset a b c
-                           continue
-                elif [[ $menu3 == '-' ]]
-                then
-                           clear
-                           substract $a $c
-                           sleep 3; clear
-                           unset a b c
-                           continue
-                elif [[ $menu3 == 'x' ]] || [[ $menu3 == 'X' ]]
-                then
-                           echo "Exit now"
-                           exit
-                else
-                           echo "Error. Please try again!"
-                           continue
-                fi
-        fi ;;   #menu 2 end
+       if [[ $menu3 == '+' ]]
+        then
+             clear
+             add $a $c
+             sleep 3; clear
+             unset a b c
+             continue
+        elif [[ $menu3 == '-' ]]
+        then
+             clear
+             substract $a $c
+             sleep 3; clear
+             unset a b c
+             continue
+         elif [[ $menu3 == 'x' ]] || [[ $menu3 == 'X' ]]
+         then
+             echo "Exit now"
+             exit
+         else
+             echo "Error. Please try again!"
+             continue
+         fi
+       fi ;;   #menu 2 end
 
     'x'|'X')    #if menu1 is x or X
         echo "Exit now"
@@ -85,4 +80,4 @@ case $menu1 in
 
  esac   #menu 1 end
 
-done   #while-loop end   
+done   #while-loop end  
