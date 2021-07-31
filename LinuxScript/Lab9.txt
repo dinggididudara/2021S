@@ -24,12 +24,12 @@ function subtract(){   #function for subtraction
 
 while [[ $menu1 != x || $menu != X ]]
 do
-echo -e "C) Calculation \n X) Exit" $menu1                           #menu 1
-if [[ $menu1 == 'c' || $menu1 == 'C' ]]
-clear
-        echo "Please enter an integer number or X to exit: " $1 $2   #menu 2
-        #if here?
-                echo "+) Add \n-) Subtract \n X) Exit" menu3         #menu 3
+echo -e "C) Calculation \n X) Exit" $menu1    #menu 1
+if [[ $menu1 == 'c' ]] || [[ $menu1 == 'C' ]]
+        clear
+        echo "Please enter an integer number or X to exit: " $1 $2 $3 menu2   #menu 2
+        if [[ "$1" != "" ]] && [[ "$2" != "" ]]  && [[ "$3" == "" ]] 
+                echo "+) Add \n-) Subtract \n X) Exit" menu3     #menu 3
                 case $menu3 in
                         '+')
                            clear
@@ -43,12 +43,17 @@ clear
                            echo "Exit now"
                            exit ;;
                         *)
-                           echo "error. please try again"
+                           echo "Error. Please try again!"
                            continue ;;
                  esac
-         elif [[ $menu1 == 'x' || $menu1 == 'X' ]]
+
+        fi    #menu 3 end
+elif [[ $menu1 == 'x' ]] || [[ $menu1 == 'X' ]] || [[ $menu2 == 'x' ]] || [[ $menu2 == 'X' ]] || [[ $menu3 == 'x' ]] || [[ $menu3 == 'X' ]]    #if user enters exit
         echo "Exit now"
         exit
+else    #if other inputs (invalid)
+        echo "Invalid input. Please try again!"
+        continue
 fi
-done
 
+done        
