@@ -35,116 +35,128 @@ import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Pattern;
+import org.apache.commons.net.util.SubnetUtils;
 
 
 public class Main {
-	static int s;
-	static int h; //how many bits borrowed
+	static int s; //subnet bits
+	static int h; //how many bits borrowed //host bits
+	static int host;
+	static char ipClass;
 	static int subnetPrefix;
+	static String networkIp;
+	static String broadcastIp;
+	static String[] ipArr = new String[4];
+	static int[] ipArrInt = new int[4];
 	public static void main(String[] args) {
 		String ip_string;
-		char ipClass;//A or B or C
+		char ipClass = 0;//A or B or C
 		
 		String[] subnet;
-		String[] ipArr = new String[4];
-		
-		int subnetIndex = s + 32;
+	
+		int subnetIndex;
+		int subnetIndexBinary;
 		
 		String ipBinary;
 		String binaryFormat;
 		
-		String networkIp;
-		String networkBinary;
-		String broadcaseIp;
-		String broadcastBinary;
-
-		byte[] ipBinaryArr; //for first ip (array)
-		String subnetIndexStr; //for subnet index binary
-		byte[] bytes4; //for
-
-		DecimalFormat formatter = new DecimalFormat("########,########,########,########");
-		DecimalFormat formatter2 = new DecimalFormat("########");
-//		String ipFormat = formatter.toString().replace(",", ".");
+		String ipBinaryFull;
 		
-		Scanner sc = new Scanner(System.in);
+		String networkIpBinary;
+		String[] networkIpArr;
 		
+		String broadcastIpBinary;
+		String[] broadcastIpArr;
+		
+		String hostMinIp;
+		String[] hostMinIpArr;
+		String hostMinBinary;
+		
+		String hostMaxBinary;
+		String hostMaxIp;
+		String[] hostMaxIpArr;
+		
+//------------start here---------------------------------------------------------------------------------------------------------------------//	
+		
+		Scanner sc = new Scanner(System.in); //get input from user
 		System.out.printf("Input: ");
 		ip_string = sc.nextLine();
 		
-		String ip = ip_string.substring(0,ip_string.indexOf("/"));
-		ipArr = ip.split("[.]"); //split to 4 parts and save into array
-		subnet = ip_string.split("/"); //subnet=subnet[1]
-		subnetPrefix = Integer.parseInt(subnet[1]); //subnet to integer type
-//		System.out.println(ipArr.length);
-//		for(int i=0;i<ipArr.length;i++) {
-//			System.out.println(ipArr[i]);
-//		} 
+		String ip = ip_string.substring(0,ip_string.indexOf("/")); //input ip except prefix
+		ipArr = ip.split("[.]"); //split to 4 parts and save into array (String)
+		for(int i=0;i<4;i++) { //ipArray: change to integer type (int)
+			ipArrInt[i] = Integer.parseInt(ipArr[i]);
+		}
+		subnetPrefix = Integer.parseInt(ip_string.substring(ip_string.indexOf("/")+1,ip_string.length())); //subnet to integer type
 		
+		if(ipArrInt[0] <= 127) {
+			ipClass = 'A';
+			s =  subnetPrefix - 8; //(subnet prefix) minus (class A's prefix) //2^s = total subnets
+			h = 24 - s; //how many bits borrowed, 2^h = host total
+		}else if(ipArrInt[0] >= 128 && ipArrInt[0] < 192) {
+			ipClass = 'B';
+			s = subnetPrefix - 16;
+			h = 16 - s;
+		}else if(ipArrInt[0] >= 192 && ipArrInt[0] < 224){
+			ipClass = 'C';
+			s = subnetPrefix -24;
+			h = 8 - s;
+		}
 		
 		try {
-			System.out.println(ip);
-			System.out.println(ip_string);
-			System.out.println(subnet[1]);
+			SubnetUtils subnetUtils = new SubnetUtils(ip_string);
+			subnetUtils.setInclusiveHostCount(true);
 			
-			ipBinaryArr = InetAddress.getByName(ip).getAddress();
-			ipBinary = new BigInteger(1, ipBinaryArr).toString(2); //calculate ip address to binary (String type)
-			
-			subnetIndexStr = Integer.toBinaryString(subnetIndex);
+			ipBinaryFull = String.format("%08d.%08d.%08d.%08d", Integer.parseInt(Integer.toBinaryString(ipArrInt[0])),Integer.parseInt(Integer.toBinaryString(ipArrInt[1])),Integer.parseInt(Integer.toBinaryString(ipArrInt[2])),Integer.parseInt(Integer.toBinaryString(ipArrInt[3]))); //ip Binary full (String)
 			
 			SubnetMask subnetMask = new SubnetMask();
-			subnetMask.subnetMaskBinary(subnet[1], subnetPrefix);
+			subnetMask.subnetMaskBinary(subnetPrefix);
 			
-			System.out.println("Output:");
-			System.out.printf("Address: %15s %45s\n", ip , formatter.format(Double.parseDouble(ipBinary)).toString().replace(",","."));
-				
-			System.out.printf("Netmask: %17s = %s %40s\n", SubnetMask.subnetDecimalString, subnet[1], SubnetMask.subnetMaskFull);
-			System.out.printf("Wildcard: %14s %47s\n", SubnetMask.wildcardStr, subnetMask.d);
+			System.out.println("\nOutput:");
+			System.out.printf("Address: %17s %47s\n", ip , ipBinaryFull);
+			System.out.printf("Netmask: %17s = %s %42s\n", SubnetMask.subnetDecimalString, subnetPrefix, SubnetMask.subnetMaskFull);
+			System.out.printf("Wildcard: %16s %47s\n", SubnetMask.wildcardStr, subnetMask.d);
 			System.out.println("=>");
 			
-			ipClass(ipArr, subnetPrefix); //decide which ip class
+			networkIp = subnetUtils.getInfo().getNetworkAddress();
+			networkIpArr = networkIp.split("[.]");
+			int[] networkIpArrInt = { Integer.parseInt(networkIpArr[0]),Integer.parseInt(networkIpArr[1]),Integer.parseInt(networkIpArr[2]),Integer.parseInt(networkIpArr[3])};
+			networkIpBinary = String.format("%08d.%08d.%08d.%08d", Integer.parseInt(Integer.toBinaryString(networkIpArrInt[0])),Integer.parseInt(Integer.toBinaryString(networkIpArrInt[1])),Integer.parseInt(Integer.toBinaryString(networkIpArrInt[2])),Integer.parseInt(Integer.toBinaryString(networkIpArrInt[3])));
 			
-//			System.out.printf("Subnet (Network): %17s %45s (Class %c)",  ,  , ipClass);
-//			System.out.printf("Broadcast: %23f %53s\n", , );
-//			System.out.printf("HostMin (FHIP): %19f %53s\n", ,);
-//			System.out.printf("HostMax (LHIP): %19f %53s\n", ,);
+			broadcastIp = subnetUtils.getInfo().getBroadcastAddress();
+			broadcastIpArr = networkIp.split("[.]");
+			int[] broadcastIpArrInt = { Integer.parseInt(broadcastIpArr[0]),Integer.parseInt(broadcastIpArr[1]) ,Integer.parseInt(broadcastIpArr[2]) ,Integer.parseInt(broadcastIpArr[3])};
+			broadcastIpBinary = String.format("%08d.%08d.%08d.%08d", Integer.parseInt(Integer.toBinaryString(broadcastIpArrInt[0])), Integer.parseInt(Integer.toBinaryString(broadcastIpArrInt[1])),Integer.parseInt(Integer.toBinaryString(broadcastIpArrInt[2])),Integer.parseInt(Integer.toBinaryString(broadcastIpArrInt[3])));
+			
+			System.out.printf("Subnet (Network):%13s/%d %40s (Class %c)\n", networkIp , subnetPrefix , SubnetMask.subnetMaskFull , ipClass);
+			System.out.printf("Broadcast: %22s %40s\n", broadcastIp , broadcastIpBinary);
+			
+			hostMinIp = subnetUtils.getInfo().getLowAddress();
+			hostMinIpArr = hostMinIp.split("[.]");
+			int[] hostMinIpArrInt = { Integer.parseInt(hostMinIpArr[0]),Integer.parseInt(hostMinIpArr[1]),Integer.parseInt(hostMinIpArr[2]),Integer.parseInt(hostMinIpArr[3])};
+			hostMinBinary = String.format("%08d.%08d.%08d.%08d", Integer.parseInt(Integer.toBinaryString(hostMinIpArrInt[0])),Integer.parseInt(Integer.toBinaryString(hostMinIpArrInt[1])),Integer.parseInt(Integer.toBinaryString(hostMinIpArrInt[2])),Integer.parseInt(Integer.toBinaryString(hostMinIpArrInt[3])));
+			
+			hostMaxIp = subnetUtils.getInfo().getHighAddress();
+			hostMaxIpArr = hostMaxIp.split("[.]");
+			int[] hostMaxIpArrInt = { Integer.parseInt(hostMaxIpArr[0]),Integer.parseInt(hostMaxIpArr[1]),Integer.parseInt(hostMaxIpArr[2]),Integer.parseInt(hostMaxIpArr[3])};
+			hostMaxBinary = String.format("%08d.%08d.%08d.%08d", Integer.parseInt(Integer.toBinaryString(hostMaxIpArrInt[0])),Integer.parseInt(Integer.toBinaryString(hostMaxIpArrInt[1])),Integer.parseInt(Integer.toBinaryString(hostMaxIpArrInt[2])),Integer.parseInt(Integer.toBinaryString(hostMaxIpArrInt[3])));
+			
+			System.out.printf("HostMin (FHIP): %17s %40s\n", hostMinIp , hostMinBinary);
+			System.out.printf("HostMax (LHIP): %17s %40s\n", hostMaxIp , hostMaxBinary);
 			
 			System.out.printf("s=%d\n", s); //subnet bits
 			System.out.printf("S=%.0f\n", Math.pow(2,s)); //subnet total number
-			System.out.printf("Subnet Index (%s) = %d\n", subnetIndexStr , subnetIndex);
+			
+			subnetIndex = s + 32;
+			subnetIndexBinary = Integer.parseInt(Integer.toBinaryString(s+32));//subnet index to binary
+			
+			System.out.printf("Subnet Index (%08d) = %d\n", subnetIndexBinary , subnetIndex);
 			System.out.printf("h= %d\n", h);
 			System.out.printf("HIPs Hosts/Net: %.0f\n", Math.pow(2, h));
 			
 			sc.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-	}
-	
-	public static char ipClass(String[] ipArr, int subnetInt) { //which ip class is it
-		int c = Integer.parseInt(ipArr[0]);
-		char ipClass = 0;
-		if(c <= 127) {
-			ipClass = 'A';
-		}else if(c >= 128 && c < 192) {
-			ipClass = 'B';
-		}else if(c >= 192 && c < 224){
-			ipClass = 'C';
-			
-		}
-		subnetBits(ipClass, subnetInt);
-		return ipClass;
-	} //ipClass end
-	public static int subnetBits(char ipClass, int subnetInt) { //calculate subnet bits, host bits
-		if(ipClass == 'A') {
-			s =  subnetInt - 8; //(subnet prefix) minus (class A's prefix)
-			h = 24 - s; //how many bits borrowed, 2^h = host total
-		}else if(ipClass == 'B') {
-			s = subnetInt - 16;
-			h = 16 - s;
-		}else if(ipClass == 'C') {
-			s = subnetInt -24;
-			h = 8 - s;
-		}
-		return h;
-	} //subnetBits end
-}
+		} //try-catch end
+	}//main end
+} //Main class end 
