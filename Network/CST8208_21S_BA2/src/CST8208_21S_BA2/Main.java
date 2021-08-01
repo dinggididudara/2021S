@@ -37,9 +37,10 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 
-public class CST8208_21S_BA2 {
+public class Main {
 	static int s;
-	static int h;
+	static int h; //how many bits borrowed
+	static int subnetPrefix;
 	public static void main(String[] args) {
 		String ip_string;
 		char ipClass;//A or B or C
@@ -48,7 +49,6 @@ public class CST8208_21S_BA2 {
 		String[] ipArr = new String[4];
 		
 		int subnetIndex = s + 32;
-		int subnetInt;
 		
 		String ipBinary;
 		String binaryFormat;
@@ -74,7 +74,7 @@ public class CST8208_21S_BA2 {
 		String ip = ip_string.substring(0,ip_string.indexOf("/"));
 		ipArr = ip.split("[.]"); //split to 4 parts and save into array
 		subnet = ip_string.split("/"); //subnet=subnet[1]
-		subnetInt = Integer.parseInt(subnet[1]); //subnet to integer type
+		subnetPrefix = Integer.parseInt(subnet[1]); //subnet to integer type
 //		System.out.println(ipArr.length);
 //		for(int i=0;i<ipArr.length;i++) {
 //			System.out.println(ipArr[i]);
@@ -91,32 +91,28 @@ public class CST8208_21S_BA2 {
 			
 			subnetIndexStr = Integer.toBinaryString(subnetIndex);
 			
-			subnetMask subnetMask = new subnetMask();
-			subnetMask.subnetMaskBinary(subnet[1], subnetInt);
+			SubnetMask subnetMask = new SubnetMask();
+			subnetMask.subnetMaskBinary(subnet[1], subnetPrefix);
 			
-			System.out.println("Output :");
-//		
-//					//calculate 
-			System.out.printf("Address :" + "%16s" + "%50s\n", ip , formatter.format(Double.parseDouble(ipBinary)).toString().replace(",","."));
-			System.out.println(subnetMask.b);
-			System.out.println(Double.parseDouble(subnetMask.b));
-			System.out.println(formatter.format(subnetMask.b).toString());
-			System.out.printf("Netmask: " + "%18s = %s" + "%45s\n", subnetMask.subnetDecimalCalculate(), subnet[1] , formatter.format(Double.parseDouble(subnetMask.b)).toString().replace(",","."));
+			System.out.println("Output:");
+			System.out.printf("Address: %15s %45s\n", ip , formatter.format(Double.parseDouble(ipBinary)).toString().replace(",","."));
+				
+			System.out.printf("Netmask: %17s = %s %40s\n", SubnetMask.subnetDecimalString, subnet[1], SubnetMask.subnetMaskFull);
+			System.out.printf("Wildcard: %14s %47s\n", SubnetMask.wildcardStr, subnetMask.d);
+			System.out.println("=>");
 			
-			System.out.printf("Wildcard: %15s %53s\n", subnetMask.wildcardStr);
+			ipClass(ipArr, subnetPrefix); //decide which ip class
 			
-			ipClass(ipArr, subnetInt); //decide which ip class
-			
-//			System.out.println("=>\nSubnet (Network): %17s %45s (Class %c)",  ,  , ipClass);
-//			System.out.println("Broadcast: " + "%23f" + "%53s");
-//			System.out.println("HostMin (FHIP): %19f %53s",);
-//			System.out.println("HostMax (LHIP): %19f %53s", );
+//			System.out.printf("Subnet (Network): %17s %45s (Class %c)",  ,  , ipClass);
+//			System.out.printf("Broadcast: %23f %53s\n", , );
+//			System.out.printf("HostMin (FHIP): %19f %53s\n", ,);
+//			System.out.printf("HostMax (LHIP): %19f %53s\n", ,);
 			
 			System.out.printf("s=%d\n", s); //subnet bits
-			System.out.printf("S=%d\n", Math.pow(2,s)); //subnet total number
-			System.out.printf("Subnet Index (%s) = %d\n", subnetIndexStr , formatter2.format(subnetIndex));
+			System.out.printf("S=%.0f\n", Math.pow(2,s)); //subnet total number
+			System.out.printf("Subnet Index (%s) = %d\n", subnetIndexStr , subnetIndex);
 			System.out.printf("h= %d\n", h);
-			System.out.printf("HIPs Hosts/Net: %d\n", Math.pow(2, h));
+			System.out.printf("HIPs Hosts/Net: %.0f\n", Math.pow(2, h));
 			
 			sc.close();
 		} catch (Exception e) {
@@ -124,7 +120,7 @@ public class CST8208_21S_BA2 {
 		}
 	}
 	
-	public static char ipClass(String[] ipArr, int subnetInt) {
+	public static char ipClass(String[] ipArr, int subnetInt) { //which ip class is it
 		int c = Integer.parseInt(ipArr[0]);
 		char ipClass = 0;
 		if(c <= 127) {
@@ -137,11 +133,11 @@ public class CST8208_21S_BA2 {
 		}
 		subnetBits(ipClass, subnetInt);
 		return ipClass;
-	}
-	public static void subnetBits(char ipClass, int subnetInt) { //calculate subnet bits, host bits
+	} //ipClass end
+	public static int subnetBits(char ipClass, int subnetInt) { //calculate subnet bits, host bits
 		if(ipClass == 'A') {
-			s =  subnetInt - 8;
-			h = 24 - s;
+			s =  subnetInt - 8; //(subnet prefix) minus (class A's prefix)
+			h = 24 - s; //how many bits borrowed, 2^h = host total
 		}else if(ipClass == 'B') {
 			s = subnetInt - 16;
 			h = 16 - s;
@@ -149,5 +145,6 @@ public class CST8208_21S_BA2 {
 			s = subnetInt -24;
 			h = 8 - s;
 		}
-	}
+		return h;
+	} //subnetBits end
 }

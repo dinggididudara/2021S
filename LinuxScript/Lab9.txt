@@ -32,18 +32,18 @@ case $menu1 in
         clear
         echo -n "Please enter an integer number or X to exit: "    #menu 2
         read a b c d
-        if [[ -n "$a" ]] && [[ -n "$b" ]] && [[ -z "$d" ]]    #if 4th parameter is null
+        if [[ -n "$a" ]] && [[ -n "$b" ]] && [[ -z "$d" ]]    #if 4th param is null (=maximum 3 parameters)
          then
 
         case $b in    #if 2nd parameter is + or -
           '+')
-             menu3='+' ;;
+             menu3='+' ;;    #if 2nd parameter is +, set menu3 variable to +
           '-')
-             menu3='-' ;;
+             menu3='-' ;;    #if 2nd parameter is -, set menu3 variable to -
             *)
              echo -e "+) Add \n-) Substract \nX) Exit" #menu 3
              read menu3
-             c=$b ;;
+             c=$b ;;     #if user only input two params then only a and b is not null. Then, set c as user input, so that a and c can go into function.
         esac
 
        if [[ $menu3 == '+' ]]
