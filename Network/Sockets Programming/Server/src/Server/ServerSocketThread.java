@@ -36,14 +36,14 @@ public class ServerSocketThread extends Thread{
 			output = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())),true); //true for auto flush
 			
 			sendMessage("What is your name?");
-			name = input.readLine(); 
-			server.broadCasting(name + "[%s] is entered now");
+			name = input.readLine();
+			sendMessage("Hello!"+name);
+//			server.broadCasting("Hello!" + name); //broadcasting
 			
-			while(true) {
-				String str_in = input.readLine();
-				server.broadCasting(name + " is entered now");
-			}
-			
+//			while(true) {
+//				String str_in = input.readLine();
+//				server.broadCasting(name + " : "+ str_in);
+//			}
 		} catch(IOException e) {
 			System.out.println(threadName + " is disconnected now");
 			server.removeClient(this);
@@ -51,7 +51,6 @@ public class ServerSocketThread extends Thread{
 			try {
 				socket.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} //catch-try end

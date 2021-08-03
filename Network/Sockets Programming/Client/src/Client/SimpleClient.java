@@ -3,12 +3,13 @@ package Client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class SimpleClient {
 	InputStream input;
 	Socket cSocket;
+	String name; //client name
 	void start() {
 		try {
 			
@@ -16,6 +17,9 @@ public class SimpleClient {
 			
 			cSocket = new Socket(InetAddress.getLocalHost().getHostAddress(), 1254); //connect to ip address
 			System.out.println("You are in Client now.");
+			System.out.println("Type your name: ");
+			Scanner sc = new Scanner(System.in);
+			name = sc.next();
 			
 			//reading information
 			input = cSocket.getInputStream();
