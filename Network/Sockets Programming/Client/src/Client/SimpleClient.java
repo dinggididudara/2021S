@@ -24,6 +24,7 @@ public class SimpleClient {
 			//reading information
 			input = cSocket.getInputStream();
 			
+			
 			byte[] buffer = new byte[100];
 			input.read(buffer);
 			
