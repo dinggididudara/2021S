@@ -78,6 +78,6 @@ case $menu1 in
         echo "Invalid input. Please try again!"
         continue ;;
 
- esac   #menu 1 end
+ esac   #menu 1 end -> go back to the main menu
 
 done   #while-loop end  

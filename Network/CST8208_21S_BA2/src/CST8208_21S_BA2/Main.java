@@ -6,6 +6,7 @@
 package CST8208_21S_BA2;
 
 import java.util.Scanner;
+
 import org.apache.commons.net.util.SubnetUtils;
 
 public class Main {
@@ -45,7 +46,7 @@ public class Main {
 		
 //-----------------------------------<start here>-------------------------------------------------------------------------------------------------------------------------------------------------------//	
 		
-		
+		while(true) {
 //--------1.get user's input---------------------------------------------------------------------------------------------------------------------------------------------------//		
 		Scanner sc = new Scanner(System.in); //get input from user																											   //
 		System.out.printf("Input: ");																																		   //
@@ -61,25 +62,27 @@ public class Main {
 		}
 		subnetPrefix = Integer.parseInt(ip_string.substring(ip_string.indexOf("/")+1,ip_string.length())); //subnet to integer type (int)
 		
-		//calculate class with subnet bits and host bits
-		if(ipArrInt[0] <= 127) {
-			ipClass = 'A';
-			s =  subnetPrefix - 8; //(subnet prefix) minus (class A's prefix) //2^s = total subnets
-			h = 24 - s; //how many bits borrowed, 2^h = host total
-		}else if(ipArrInt[0] >= 128 && ipArrInt[0] < 192) {
-			ipClass = 'B';
-			s = subnetPrefix - 16;
-			h = 16 - s;
-		}else if(ipArrInt[0] >= 192 && ipArrInt[0] < 224){
-			ipClass = 'C';
-			s = subnetPrefix -24;
-			h = 8 - s;
-		}
+		
 		/**
 		 * calculate 
 		 */
 		try {
+			//calculate class with subnet bits and host bits
+			if(ipArrInt[0] <= 127) {
+				ipClass = 'A';
+				s =  subnetPrefix - 8; //(subnet prefix) minus (class A's prefix) //2^s = total subnets
+				h = 24 - s; //how many bits borrowed, 2^h = host total
+			}else if(ipArrInt[0] >= 128 && ipArrInt[0] < 192) {
+				ipClass = 'B';
+				s = subnetPrefix - 16;
+				h = 16 - s;
+			}else if(ipArrInt[0] >= 192 && ipArrInt[0] < 224){
+				ipClass = 'C';
+				s = subnetPrefix -24;
+				h = 8 - s;
+			}
 			
+			if(s>=0) {
 			SubnetUtils subnetUtils = new SubnetUtils(ip_string);
 			subnetUtils.setInclusiveHostCount(true);
 			
@@ -157,10 +160,15 @@ public class Main {
 			System.out.printf("h= %d\n", h);																										 //
 			System.out.printf("HIPs Hosts/Net: %.0f\n", Math.pow(2, h));																			 //
 //---------------------------------------------------------------------------------------------------------------------------------------------------//	
-			
+			} else {
+				System.err.println("Illegal subnet mask. please try again");
+				continue;
+			}//if end
+		
 			sc.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-		} //try-catch end
+		} //try-catch end	
+		} //while end
 	}//main end
 } //Main class end 

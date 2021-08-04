@@ -8,7 +8,7 @@
  clear
  option=n #initialize
 
- while [ $option != "Q" ] || [ $option != "q" ]
+ while [ $option != "Q" ] || [ $option != "q" ]   #run it while option is not quit
  do
  echo "Choose one of the following options:"
  echo "A Create a user account"
@@ -22,48 +22,48 @@
 
   if [ ${option} == "A" ] || [ ${option} == "a" ]
   then
-        echo "Username: " name
-        echo "User's home directory: " homedir
-        echo "Default login shell: " loginsh
+        echo "Username: " name   #ask user to input name
+        echo "User's home directory: " homedir   #ask user to input directory
+        echo "Default login shell: " loginsh   #ask user to input login shell
 
-useradd -d $homedir -m -s ${loginsh} ${name}
+useradd -d $homedir -m -s ${loginsh} ${name}   #command
 
   elif [ ${option} == "B" ] || [ ${option} == "b" ]
   then
-        echo "Which user?: " deluser
-        userdel -r ${deluser}
+        echo "Which user?: " deluser   #ask user to input which user to delete
+        userdel -r ${deluser}   #command
 
   elif [ ${option} == "C" ] || [ ${option} == "c" ]
   then
-        echo "Which user to change supplementary group?" user
-        echo "group name?" supgroup
+        echo "Which user to change supplementary group?" user   #ask user to input which supplementary group to change
+        echo "group name?" supgroup   #ask user to input name of that group
         usermod -G ${supgroup} ${user}
 
   elif [ ${option} == "D" ] || [ ${option} == "d" ]
   then
-        echo "Which user to change initial group?: " user
-        echo " initial group name?: " g
-        usermod -g $g ${user}
+        echo "Which user to change initial group?: " user   #ask user to input which initial group to change
+        echo " initial group name?: " g    #ask user to input name of that group
+        usermod -g $g ${user}   #command
 
   elif [ ${option} == "E" ] || [ ${option} == "e" ]
   then
-echo "Which user to change default login shell?: " user
-          echo "Shell name?: " shell
-          chsh -s ${shell} ${user}
+echo "Which user to change default login shell?: " user   #ask user to input which default login shell to change
+          echo "Shell name?: " shell   #ask user to input name of that shell
+          chsh -s ${shell} ${user}   #command
 
   elif [ ${option} == "F" ] || [ ${option} == "f" ]
   then
-          echo "Which user to change account expiration date?: " user
-          echo "date? (YYYY-MM-DD): " date
-          usermod -e ${date} ${user}
+          echo "Which user to change account expiration date?: " user   #ask user to input which user to change
+          echo "date? (YYYY-MM-DD): " date   #ask user to input the date with following format
+          usermod -e ${date} ${user}   #command
 
-  elif [ ${option} == "Q" ] || [ ${option} == "q" ]
+  elif [ ${option} == "Q" ] || [ ${option} == "q" ]   #if user choose quit
   then
-          sleep 3
-          clear
-          exit
+          sleep 3   #sleep for 3 seconds
+          clear   #clear the screen
+          exit   #then exit
 
   fi #if-else ends
-  sleep 3
-  clear 
+  sleep 3   #if one option ends, sleep for 3 seconds
+  clear    #clear the screen -> then go back to the main menu
  done #while-loop ends
