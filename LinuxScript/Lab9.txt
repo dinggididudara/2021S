@@ -22,7 +22,7 @@ menu1=n   #initialize for until-loop
 
 until [[ $menu1 == 'x' ]] || [[ $menu1 == 'X' ]] || [[ $menu2 == 'x' ]] || [[ $menu2 == 'X' ]] || [[ $menu3 == 'x' ]] || [[ $menu3 == 'X' ]]
 do
-
+clear
 echo -e "C) Calculation \nX) Exit"  #menu 1
 read menu1
 
