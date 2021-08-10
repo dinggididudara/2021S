@@ -160,14 +160,16 @@ public class Main {
 			System.out.printf("h= %d\n", h);																										 //
 			System.out.printf("HIPs Hosts/Net: %.0f\n", Math.pow(2, h));																			 //
 //---------------------------------------------------------------------------------------------------------------------------------------------------//	
+			sc.close();
+			break;
 			} else {
 				System.err.println("Illegal subnet mask. please try again");
 				continue;
 			}//if end
-		
-			sc.close();
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch(IllegalArgumentException iae) {
+			System.err.println("Illegal subnet mask. please try again");
+		}catch (Exception e) {
+			System.err.println("Illegal subnet mask. please try again");
 		} //try-catch end	
 		} //while end
 	}//main end

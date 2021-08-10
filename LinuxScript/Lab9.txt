@@ -8,12 +8,12 @@
 #description: fuctions that operate add and subtract
 
 function add() {  #function for addition 
-        add=`expr $a + $c`
+        add=$((a+c))
         echo "The Sum of $a plus $c equals $add"
 }
 
 function substract() {   #function for subtraction
-        sub=`expr $a - $c`
+        sub=$((a-c))
         echo "The Subtraction of $a minus $c equlas $sub"
 }
 
@@ -46,14 +46,14 @@ case $menu1 in
              c=$b ;;     #if user only input two params then only a and b is not null. Then, set c as user input, so that a and c can go into function.
         esac
 
-       if [[ $menu3 == '+' ]]
+       if [[ $menu3 == '+' ]] #if menu3 is + sign
         then
              clear
              add $a $c
              sleep 3; clear
              unset a b c
              continue
-        elif [[ $menu3 == '-' ]]
+        elif [[ $menu3 == '-' ]] #if menu3 is - sign
         then
              clear
              substract $a $c

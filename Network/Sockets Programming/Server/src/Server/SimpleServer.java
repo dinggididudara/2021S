@@ -20,6 +20,7 @@ public class SimpleServer {
 		
 		try {
 			sSocket = new ServerSocket(1254); //set port number 1254
+			System.out.println("Server Socket is created now.");
 			sSocket.setReuseAddress(true); //re-using port number again
 			
 			while(true) { 

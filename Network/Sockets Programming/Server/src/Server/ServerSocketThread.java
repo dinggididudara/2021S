@@ -49,6 +49,7 @@ public class ServerSocketThread extends Thread{
 			server.removeClient(this);
 		} finally {
 			try {
+				System.out.println("Client out now.");
 				socket.close();
 			} catch (IOException e) {
 				e.printStackTrace();
